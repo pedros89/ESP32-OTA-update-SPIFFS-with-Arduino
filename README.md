@@ -15,7 +15,8 @@ It is super quick and you can find the newly generated .bin image in
 ![alt text](https://community.mongoose-os.com/uploads/default/original/1X/80a8ea4e793d19d2eec82779fb60aa747a097220.png)
 
 2) SECOND STEP: PUT THE GENERATED IMAGE ON YOUR WEBSITE FTP SERVER
-3) THIRD STEP: INSTALL THE REQUIRED LIBRARIES
+3) GET YOUR SERVER CERTIFICATE  [Link to how to download certificate](https://www.esri.com/arcgis-blog/products/bus-analyst/field-mobility/learn-how-to-download-a-ssl-certificate-for-a-secured-portal/)
+5) THIRD STEP: INSTALL THE REQUIRED LIBRARIES
 All the .h file missing can be get from here 
 https://github.com/espressif/esp-idf
 
