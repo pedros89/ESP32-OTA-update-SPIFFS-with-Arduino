@@ -1,4 +1,4 @@
-# ESP32-OTA-update-SPIFFS-with-Arduino
+# ESP32 OTA update SPIFFS with Arduino IDE
 Use Arduino IDE to upload a file system image (SPIFFS) on your ESP32 from your online https webserver
 
 1) FIRST STEP: GENERATE IMAGE
