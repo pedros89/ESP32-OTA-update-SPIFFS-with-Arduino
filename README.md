@@ -10,7 +10,7 @@ https://randomnerdtutorials.com/esp32-vs-code-platformio-spiffs/
 
 Look at this picture to see where to click to generate the image.
 It is super quick and you can find the newly generated .bin image in
-C:\Users\YOUR_NAME\Documents\PlatformIO\Projects\YOUR_PROJECT_NAME\.pio\build\esp32doit-devkit-v1\spiffs.bin
+C:\Users\YOUR_NAME\Documents\PlatformIO\Projects\YOUR_PROJECT_NAME \\.pio\build\esp32doit-devkit-v1\spiffs.bin
 
 
 ![alt text](https://community.mongoose-os.com/uploads/default/original/1X/80a8ea4e793d19d2eec82779fb60aa747a097220.png)
