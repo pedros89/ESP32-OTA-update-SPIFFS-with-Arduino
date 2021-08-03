@@ -54,9 +54,9 @@ static void __attribute__((noreturn)) task_fatal_error(void)
 
 
 
-void connectWiFI(){
-  const char* ssid = "TEISWLAN";
-  const char* password = "stry+tek-r75";
+void connectWiFI(){                                                //quick WiFi connection
+  const char* ssid = "PUT YOUR WIFI SSID HERE";
+  const char* password = "PUT YOUR WIFI PASSWORD HERE";
   
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
@@ -69,7 +69,7 @@ void connectWiFI(){
 void ota_spiffs_task(void)
 {
 esp_err_t err;
-/* update handle : set by esp_ota_begin(), must be freed via esp_ota_end() */
+
 esp_ota_handle_t update_handle = 0 ;
 const esp_partition_t *update_partition = NULL;
 esp_partition_t *spiffs_partition=NULL;
@@ -104,6 +104,9 @@ esp_partition_iterator_release(spiffs_partition_iterator);
 if(WiFi.status() == WL_CONNECTED){
   Serial.println("Connect to Wifi ! Start to Connect to Server....");
 }
+else{
+   Serial.println("You are not connected to WiFi. You will get a connection error");
+}
 
 
 
@@ -111,12 +114,7 @@ esp_http_client_config_t config;
   memset(&config, 0, sizeof(esp_http_client_config_t));
   config.url = URL_SPIFFS;
   config.cert_pem = UPGRADE_SERVER_CERT;
-  //esp_err_t ret = esp_https_ota(&config);
- /*
-esp_http_client_config_t config = {
-    .url = url,
-    .cert_pem = UPGRADE_SERVER_CERT,
-};*/
+
 
 esp_http_client_handle_t client = esp_http_client_init(&config);
 if (client == NULL) {
@@ -170,9 +168,8 @@ ESP_LOGI(TAG, "Total Write binary data length : %d", binary_file_length);
  
 ESP_LOGI(TAG, "restart!");
 
-//xTaskCreate(&ota_example_task, "ota_example_task", 8192, NULL, 5, NULL); //ah here it was uploading the bin no need for it
-//vTaskDelete(NULL);
-//esp_restart();
+
+//esp_restart();                //you can restart if you want
 }
 
 
