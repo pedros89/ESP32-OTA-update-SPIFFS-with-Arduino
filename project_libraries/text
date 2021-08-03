@@ -1,1 +1,3 @@
 
+Place the libraries in Documents/Arduino/Library/NameTheFolder
+You can find some libraries, if you miss some you'll find them in https://github.com/espressif/esp-idf
