@@ -1,32 +1,10 @@
-#pragma once
 #include <Arduino.h>      // Setup e loop
 #include <CertMeren.h>    //in this file put your certificate
 
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-
-#include <string.h>       // helper function C
-#include <stdbool.h>      //
-#include <stdint.h>       //
-#include <stdarg.h>       //
-#include <sys/param.h>      // definition of macro MIN
-#include "esp_wifi.h"     // Configurazione ed eventi legacy Wi-Fi 3.3.5
-#include "esp_system.h"     // function function (reboot, ...)
-#include "esp_event.h"      // event handler 3.3.5
-#include "esp_event_loop.h"   // Event loop legacy per la gestione eventi
-#include "esp_log.h"      // application logging level
-#include "esp_task_wdt.h"   // Task watchdog timer per evitare blocchi
-#include "esp_task.h"     // Task FreeRTOS
-#include "nvs_flash.h"      // manage partition NVS
-#include "nvs.h"        // manage NVS 
-#include "lwip/sockets.h"   // Socket
-#include "esp_https_ota.h"    // remote ota
-#include "esp_ota_ops.h"    // 
-#include "esp_http_server.h"  // Webserver
+#include "esp_ota_ops.h"    
 #include <WiFi.h>
 #include <WiFiClient.h>
-#include "esp_http_client.h"   //added client
+#include "esp_http_client.h"   //it manages the SSL connectin
 
 #define BUFFSIZE 1024   
 
