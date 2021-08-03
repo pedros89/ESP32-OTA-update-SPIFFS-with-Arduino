@@ -21,3 +21,6 @@ All the .h file missing can be get from here
 https://github.com/espressif/esp-idf
 
 4) FOURTH STEP: UPLOAD THE .ino CODE TO YOUR ESP32
+
+THIS GUIDE IS ONLY TO UPDATE THE SPIFFS .bin OF ESP32, NOT ESP32 FIRMWARE ON THE APP PARTITION. IF YOU NEED TO UPDATE THE ESP32 FIRMWARE VIA OTA WITH ARDUINO use this code:
+https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples/HTTPS_OTA_Update
