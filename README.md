@@ -31,21 +31,21 @@ https://github.com/espressif/esp-idf
 THIS GUIDE IS ONLY TO UPDATE THE SPIFFS .bin OF ESP32, NOT ESP32 FIRMWARE ON THE APP PARTITION. IF YOU NEED TO UPDATE THE ESP32 FIRMWARE VIA OTA WITH ARDUINO use this code:
 https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples/HTTPS_OTA_Update
 
-5) to enable ESP datalogger settings → code debug level → verbose
+5) ENABLE DATALOGGER: to enable ESP datalogger settings → code debug level → verbose
  https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/ArduinoBLE.md#switching-on-debugging
 
-6) make sure that when you implement the OTA SPIFFS Upload funciton in your code if you implement the "SPIFFS.h" in your sketch make sure you format spiffs before installing the image otherwise it won't work
+6) BEFORE OTA UPDATE SPIFFS FORMAT SPIFFS: make sure that when you implement the OTA spiffs upload funciton in your code if you implement the "SPIFFS.h" in your sketch make sure you format spiffs before installing the image otherwise it won't work
 
 ```
  #include "SPIFFS.h"
 
-     if(!SPIFFS.begin(true)){    //you have to include this funciton for sure if you want to access spiffs files
-        Serial.println("An Error has occurred while mounting SPIFFS");
-        return;
-      }   
-      
-      SPIFFS.format();           //make sure you run this function before the OTA spiffs update task in your code
-      ota_spiffs_task();
+ if(!SPIFFS.begin(true)){    //you have to include this funciton for sure if you want to access spiffs files
+    Serial.println("An Error has occurred while mounting SPIFFS");
+    return;
+  }   
+
+  SPIFFS.format();           //make sure you run this function before the OTA spiffs update task in your code
+  ota_spiffs_task();
 ```
 
     
