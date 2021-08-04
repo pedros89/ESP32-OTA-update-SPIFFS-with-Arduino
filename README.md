@@ -34,7 +34,7 @@ https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples
 5) to enable ESP datalogger settings → code debug level → verbose
  https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/ArduinoBLE.md#switching-on-debugging
 
-6) make sure that when you implement the OTA SPIFFS Upload funciton in your code if you implement the "SPIFFS.h" in your sketch make sure you format spiffs before installing the image otherwise it's unstable
+6) make sure that when you implement the OTA SPIFFS Upload funciton in your code if you implement the "SPIFFS.h" in your sketch make sure you format spiffs before installing the image otherwise it won't work
 
 ```
  #include "SPIFFS.h"
