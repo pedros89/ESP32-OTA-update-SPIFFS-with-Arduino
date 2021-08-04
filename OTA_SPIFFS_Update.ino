@@ -27,7 +27,7 @@
 #include "esp_wifi.h"
 #endif
 
-#define URL_SPIFFS "https://www.merenel.com/fileSystemImage.bin"
+#define URL_SPIFFS "https://www.YOUR WEBSITE.com/fileSystemImage.bin"
 
 #define BUFFSIZE 1024
 #define HASH_LEN 32 /* SHA-256 digest length */
@@ -42,8 +42,8 @@ extern const uint8_t server_cert_pem_end[] asm("_binary_ca_cert_pem_end");
 
 
 void connectWiFI(){
-  const char* ssid = "TEISWLAN";
-  const char* password = "stry+tek-r75";
+  const char* ssid = "YOUR WIFI SSID HERE";
+  const char* password = "YOUR WIFI PASSWORD HERE";
   
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
