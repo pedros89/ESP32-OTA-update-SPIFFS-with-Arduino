@@ -18,8 +18,11 @@ C:\Users\YOUR_NAME\Documents\PlatformIO\Projects\YOUR_PROJECT_NAME\\.pio\build\e
 Remember that the spiffs image size is fixed according to the size of the partition of your board, if you have a board with an ESP32 with bigger memory and you want to assign more memory to spiffs partition e.g. "SpurkFun ESP32 Thing plus" you have to select the right board from the PlatformIO to make a suitable spiffs image for that board. If the spiffs image and spiffs partition size do not match they will give you an error when you try to mount that partition with SPIFFS.begin();
 
 2) SECOND STEP: PUT THE GENERATED IMAGE ON YOUR WEBSITE FTP SERVER
-3) GET YOUR SERVER CERTIFICATE  [Link to how to download certificate](https://www.esri.com/arcgis-blog/products/bus-analyst/field-mobility/learn-how-to-download-a-ssl-certificate-for-a-secured-portal/)
-5) THIRD STEP: INSTALL THE REQUIRED LIBRARIES
+3) GET YOUR SERVER CERTIFICATE 
+Substitute the certificate with the one of your website in the file CertMern.h
+[Link to how to download certificate](https://www.esri.com/arcgis-blog/products/bus-analyst/field-mobility/learn-how-to-download-a-ssl-certificate-for-a-secured-portal/)
+
+6) THIRD STEP: INSTALL THE REQUIRED LIBRARIES
 All the .h file missing can be get from here 
 https://github.com/espressif/esp-idf
 
