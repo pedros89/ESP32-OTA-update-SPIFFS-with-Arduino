@@ -32,8 +32,9 @@ https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples
  https://github.com/nkolban/esp32-snippets/blob/master/cpp_utils/ArduinoBLE.md#switching-on-debugging
 
 6) make sure that when you implement the OTA SPIFFS Upload funciton in your code if you implement the "SPIFFS.h" in your sketch make sure you format spiffs before installing the image otherwise it's unstable
-     
-     #include "SPIFFS.h"
+
+```
+ #include "SPIFFS.h"
 
      if(!SPIFFS.begin(true)){                                              //you have to include this funciton for sure if you want to access spiffs files
         Serial.println("An Error has occurred while mounting SPIFFS");
@@ -42,3 +43,6 @@ https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples
       
       SPIFFS.format();                //make sure you run this function before the OTA spiffs update task in your code
       ota_spiffs_task();
+```
+
+    
