@@ -36,12 +36,12 @@ https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples
 ```
  #include "SPIFFS.h"
 
-     if(!SPIFFS.begin(true)){                                              //you have to include this funciton for sure if you want to access spiffs files
+     if(!SPIFFS.begin(true)){    //you have to include this funciton for sure if you want to access spiffs files
         Serial.println("An Error has occurred while mounting SPIFFS");
         return;
       }   
       
-      SPIFFS.format();                //make sure you run this function before the OTA spiffs update task in your code
+      SPIFFS.format();           //make sure you run this function before the OTA spiffs update task in your code
       ota_spiffs_task();
 ```
 
