@@ -181,7 +181,8 @@ ESP_LOGI(TAG, "Total Write binary data length : %d", binary_file_length);
  
 //ESP_LOGI(TAG, "Prepare to launch ota APP task or restart!");
 //xTaskCreate(&ota_example_task, "ota_example_task", 8192, NULL, 5, NULL);
-vTaskDelete(NULL);
+//vTaskDelete(NULL);
+ESP.restart();
 }
 
 
