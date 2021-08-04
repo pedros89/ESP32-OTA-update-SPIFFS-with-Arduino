@@ -1,23 +1,82 @@
-#include <Arduino.h>      // Setup e loop
-#include <CertMeren.h>    //in this file put your certificate
-
-#include "esp_ota_ops.h"    
+/* OTA example
+   This example code is in the Public Domain (or CC0 licensed, at your option.)
+   Unless required by applicable law or agreed to in writing, this
+   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
+   CONDITIONS OF ANY KIND, either express or implied.
+*/
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "esp_system.h"
+#include "esp_event.h"
+#include "esp_log.h"
+#include "esp_ota_ops.h"
+#include "esp_http_client.h"
+#include "esp_flash_partitions.h"
+#include "esp_partition.h"
+#include "nvs.h"
+#include "nvs_flash.h"
+#include "driver/gpio.h"
+#include "protocol_examples_common.h"
+#include "errno.h"
+#include <CertMeren.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
-#include "esp_http_client.h"   //it manages the SSL connectin
 
-#define BUFFSIZE 1024   
+#if CONFIG_EXAMPLE_CONNECT_WIFI
+#include "esp_wifi.h"
+#endif
 
+#define URL_SPIFFS "https://www.merenel.com/fileSystemImage.bin"
 
+#define BUFFSIZE 1024
+#define HASH_LEN 32 /* SHA-256 digest length */
+
+static const char *TAG = "native_ota_example";
+/*an ota data write buffer ready to write to the flash*/
 static char ota_write_data[BUFFSIZE + 1] = { 0 };
+extern const uint8_t server_cert_pem_start[] asm("_binary_ca_cert_pem_start");
+extern const uint8_t server_cert_pem_end[] asm("_binary_ca_cert_pem_end");
 
-#define URL_SPIFFS "https://www.putYourWebsiteHere.com/fileSystemImage.bin"       //here you must put the file image
+#define OTA_URL_SIZE 256
 
+
+void connectWiFI(){
+  const char* ssid = "TEISWLAN";
+  const char* password = "stry+tek-r75";
+  
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+    Serial.print("connecting to WiFi");
+  }
+}
 
 static void http_cleanup(esp_http_client_handle_t client)
 {
     esp_http_client_close(client);
     esp_http_client_cleanup(client);
+}
+
+static void print_sha256 (const uint8_t *image_hash, const char *label)
+{
+    char hash_print[HASH_LEN * 2 + 1];
+    hash_print[HASH_LEN * 2] = 0;
+    for (int i = 0; i < HASH_LEN; ++i) {
+        sprintf(&hash_print[i * 2], "%02x", image_hash[i]);
+    }
+    ESP_LOGI(TAG, "%s: %s", label, hash_print);
+}
+
+static void infinite_loop(void)
+{
+    int i = 0;
+    ESP_LOGI(TAG, "When a new firmware is available on the server, press the reset button to download it");
+    while(1) {
+        ESP_LOGI(TAG, "Waiting for a new firmware ... %d", ++i);
+        vTaskDelay(2000 / portTICK_PERIOD_MS);
+    }
 }
 
 static void __attribute__((noreturn)) task_fatal_error(void)
@@ -30,24 +89,10 @@ static void __attribute__((noreturn)) task_fatal_error(void)
     }
 }
 
-
-
-void connectWiFI(){                                                //quick WiFi connection
-  const char* ssid = "PUT YOUR WIFI SSID HERE";
-  const char* password = "PUT YOUR WIFI PASSWORD HERE";
-  
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    Serial.print("connecting to WiFi");
-  }
-}
-
-void ota_spiffs_task(void)
+void ota_spiffs_task()
 {
 esp_err_t err;
-
+/* update handle : set by esp_ota_begin(), must be freed via esp_ota_end() */
 esp_ota_handle_t update_handle = 0 ;
 const esp_partition_t *update_partition = NULL;
 esp_partition_t *spiffs_partition=NULL;
@@ -78,35 +123,26 @@ esp_partition_iterator_release(spiffs_partition_iterator);
    event group.
 */
 
-
-if(WiFi.status() == WL_CONNECTED){
-  Serial.println("Connect to Wifi ! Start to Connect to Server....");
-}
-else{
-   Serial.println("You are not connected to WiFi. You will get a connection error");
-}
-
-
-
+//xEventGroupWaitBits(wifi_event_group, CONNECTED_BIT,false, true, portMAX_DELAY);
+ESP_LOGI(TAG, "Connect to Wifi ! Start to Connect to Server....");
+ 
 esp_http_client_config_t config;
   memset(&config, 0, sizeof(esp_http_client_config_t));
   config.url = URL_SPIFFS;
   config.cert_pem = UPGRADE_SERVER_CERT;
 
 
+  
 esp_http_client_handle_t client = esp_http_client_init(&config);
 if (client == NULL) {
     ESP_LOGE(TAG, "Failed to initialise HTTP connection");
     task_fatal_error();
 }
-
-
 err = esp_http_client_open(client, 0);
 if (err != ESP_OK) {
     ESP_LOGE(TAG, "Failed to open HTTP connection: %s", esp_err_to_name(err));
     esp_http_client_cleanup(client);
     task_fatal_error();
-    Serial.println("fatal error");
 }
 esp_http_client_fetch_headers(client);
  
@@ -115,49 +151,44 @@ err=esp_partition_erase_range(spiffs_partition,spiffs_partition->address,spiffs_
  
  
 int binary_file_length = 0;
-int offset=0;
 /*deal with all receive packet*/
-while (1) {
-    int data_read = esp_http_client_read(client, ota_write_data, BUFFSIZE);
-    if (data_read < 0) {
-        ESP_LOGE(TAG, "Error: SSL data read error");
-        http_cleanup(client);
-        task_fatal_error();
-    } else if (data_read > 0) {
-        /* 3 : WRITE SPIFFS PARTITION */
-        err = esp_partition_write(spiffs_partition,offset,(const void *)ota_write_data, data_read);
- 
-        if (err != ESP_OK) {
+int offset=0;
+    /*deal with all receive packet*/
+    while (1) {
+        int data_read = esp_http_client_read(client, ota_write_data, BUFFSIZE);
+        if (data_read < 0) {
+            ESP_LOGE(TAG, "Error: SSL data read error");
             http_cleanup(client);
             task_fatal_error();
-        }
-        offset=offset+1024;
-        
+        } else if (data_read > 0) {
+            /* 3 : WRITE SPIFFS PARTITION */
+            err= esp_partition_write(spiffs_partition,offset,(const void *)ota_write_data, data_read);
+            
+            if (err != ESP_OK) {
+                http_cleanup(client);
+                task_fatal_error();
+            }
+            offset=offset+1024;
+       
         binary_file_length += data_read;
         ESP_LOGD(TAG, "Written image length %d", binary_file_length);
-        Serial.println("Writing..");
     } else if (data_read == 0) {
         ESP_LOGI(TAG, "Connection closed,all data received");
-        Serial.println("Finished to Write");
         break;
     }
 }
 ESP_LOGI(TAG, "Total Write binary data length : %d", binary_file_length);
  
-ESP_LOGI(TAG, "restart!");
-
-
-//esp_restart();                //you can restart if you want
+//ESP_LOGI(TAG, "Prepare to launch ota APP task or restart!");
+//xTaskCreate(&ota_example_task, "ota_example_task", 8192, NULL, 5, NULL);
+vTaskDelete(NULL);
 }
 
 
-void setup() {
-  Serial.begin(115200);
+
+void setup(){
   connectWiFI();
   ota_spiffs_task();
-}
+  }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
+void loop(){}
