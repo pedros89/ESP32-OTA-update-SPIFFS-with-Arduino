@@ -29,6 +29,8 @@ https://github.com/espressif/esp-idf
 4) FOURTH STEP: UPLOAD THE .ino CODE TO YOUR ESP32
 
 THIS GUIDE IS ONLY TO UPDATE THE SPIFFS .bin OF ESP32, NOT ESP32 FIRMWARE ON THE APP PARTITION. IF YOU NEED TO UPDATE THE ESP32 FIRMWARE VIA OTA WITH ARDUINO use this code:
+https://github.com/pedros89/ESP32-update-both-OTA-Firmware-and-OTA-SPIFFS-with-Arduino
+You can also use the Arduino ESP32 core library Update but I found that it is not always working, on some websites with redirect it give the error file not found. So I suggest you to use the above link. You can try the following example if you like though.
 https://github.com/espressif/arduino-esp32/tree/master/libraries/Update/examples/HTTPS_OTA_Update
 
 5) ENABLE DATALOGGER: to enable ESP datalogger settings → code debug level → verbose
