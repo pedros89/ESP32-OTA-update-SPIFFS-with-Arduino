@@ -10,6 +10,7 @@ Make shure you select the right board and you select the partition type you want
 
 If you press ESP sketch data Upload a spiffs image will automatically be generated for you according to the selection of the partition you selected above.
 C:\Users\YOUR_NAME_HERE\AppData\Local\Temp\arduino_build_526090/YOUR_PROJECT_NAME.spiffs.bin
+It does no matter if you don't have a board copnnected to the COM the spiffs image will generate anyway
 
 ![image](https://user-images.githubusercontent.com/30262131/172792737-cf27a1d5-5917-4f6c-b5ad-76b4a9403a99.png)
 
