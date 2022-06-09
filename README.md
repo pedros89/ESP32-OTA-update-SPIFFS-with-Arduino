@@ -3,7 +3,20 @@ Use Arduino IDE to upload a file system image (SPIFFS) on your ESP32 from your o
 
 1) FIRST STEP: GENERATE IMAGE
 
-In my opinion the best way to generate spiffs images for ESP32 is to use Visual Code with the plug in PlatformIO.
+The best and quicker way to generate a Spiffs image is to use Ardino IDE, just open your sketch folder and find the folder called data.  Inside data put all the file you need in SPIFFS (e.g. .png images, .css stylesheet, ...)
+
+Make shure you select the right board and you select the partition type you want to work with, in my case as you see in the picture I am working with ESP with 16MB of flash so I selected SparkFun ESP32 Thing Plus as board becasue it has 16MB of flash and I am selecting default partition scheme
+![image](https://user-images.githubusercontent.com/30262131/172793718-19beb1cc-f8c9-42ed-8084-74751ff0299f.png)
+
+If you press ESP sketch data Upload a spiffs image will automatically be generated for you according to the selection of the partition you selected above.
+C:\Users\YOUR_NAME_HERE\AppData\Local\Temp\arduino_build_526090/YOUR_PROJECT_NAME.spiffs.bin
+
+![image](https://user-images.githubusercontent.com/30262131/172792737-cf27a1d5-5917-4f6c-b5ad-76b4a9403a99.png)
+
+![image](https://user-images.githubusercontent.com/30262131/172794434-e064488a-afc3-44fd-b73f-5d580024031e.png)
+
+
+Another good way to generate spiffs images for ESP32 is to use Visual Code with the plug in PlatformIO.
 
 See this tutorial to set everything up
 https://randomnerdtutorials.com/esp32-vs-code-platformio-spiffs/
